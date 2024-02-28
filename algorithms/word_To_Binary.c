@@ -2,20 +2,27 @@
 #include <string.h>
 
 void wordToBinary(char *word) {
-    int i, j;
-    for (i = 0; i < strlen(word); i++) {
+    printf("\n--Binary representation of '%s'--\n________________________________", word); for(int i = 0; word[i] != '\0'; i++) {printf("_");} printf("\n\n");
+    for (int i = 0; word[i] != '\0'; i++) {
         char character = word[i];
-        for (j = 8; j > 0; j--) {
-            printf("%d", (character >> (j - 1)) & 1);
+        int ascii_code = (int)character;
+        printf("Character '%c': ASCII code %d, Binary: ", character, ascii_code);
+        for (int j = 7; j >= 0; j--) {
+            printf("%d", (ascii_code >> j) & 1);
         }
-        printf(" ");
+        printf("\n");
     }
-    printf("\n");
 }
 
 int main() {
-    char word[] = "hello";
-    printf("Binary representation of '%s':\n", word);
+    char word[50];
+
+    printf("Enter a word: ");
+    fgets(word, sizeof(word), stdin);
+
+    word[strcspn(word, "\n")] = '\0'; // Remove the new line
+
     wordToBinary(word);
+    
     return 0;
 }
