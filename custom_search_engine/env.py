@@ -1,3 +1,0 @@
-OAUTH_API = "AIzaSyBSjb0Im5nwukBlswR3taC36al6_TzgUJc"
-SEARCHE_ENGINE_ID = "92d4c4fd51215455d"
-
