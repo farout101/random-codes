@@ -19,6 +19,5 @@ response = requests.get(url, params=params)
 result = response.json()
 # print(result)
 
-print("\n------The Below is the link to the image------\n")
 if 'items' in result:
     print(result['items'][0]['link'])
