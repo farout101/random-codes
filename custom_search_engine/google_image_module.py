@@ -25,6 +25,8 @@ def search_google_image(search_query):
 
     response = requests.get(url, params=params)
     
+    print(response.text)
+    
     if response.status_code == 200:
         result = response.json()
         if 'items' in result:
@@ -33,3 +35,5 @@ def search_google_image(search_query):
             return {"error": "didnt find image"}
     else:
         return {"error": "something wrong with image searching server"}
+
+print(search_google_image("pizza"))

@@ -2,7 +2,7 @@ import requests
 import env
 
 API_KEY = env.OAUTH_API
-SEARCH_ENGINE_ID = env.SEARCHE_ENGINE_ID
+SEARCH_ENGINE_ID = env.SEARCH_ENGINE_ID
 
 search_query = "Beef ribs"
 
