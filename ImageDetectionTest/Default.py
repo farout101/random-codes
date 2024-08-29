@@ -3,6 +3,7 @@ import streamlit as st
 import google.generativeai as genai
 from google.ai.generativelanguage_v1beta.types import content
 from PIL import Image
+import tempfile
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -10,20 +11,26 @@ load_dotenv()
 # Configure the API key
 genai.configure(api_key=os.environ.get("GEMINI_AI_API_KEY"))
 
-def upload_to_gemini(path, mime_type=None):
-    """Uploads the given file to Gemini with optional MIME type inference."""
+def upload_to_gemini(file_path, mime_type=None):
+    """Uploads the file to Gemini."""
     try:
-        file = genai.upload_file(path, mime_type=mime_type)
-        st.write(f"Uploaded file '{file.display_name}' as: {file.uri}")
+        # Upload file content using the file path
+        file = genai.upload_file(file_path, mime_type=mime_type)
+        
+        st.write(f"Uploaded file as: {file.uri}")
         return file
     except Exception as e:
-        st.error(f"Failed to upload file '{path}': {str(e)}")
+        st.error(f"Failed to upload file: {str(e)}")
         return None
 
-def process_image(file):
+def process_image(file_object, mime_type):
     """Process the uploaded image with the Generative AI model."""
-    mime_type = "image/jpeg"  # Assuming JPEG for simplicity; adjust as needed
-    gemini_file = upload_to_gemini(file.name, mime_type)
+    # Save the file to a temporary location
+    with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
+        tmp_file.write(file_object.read())
+        tmp_file_path = tmp_file.name
+
+    gemini_file = upload_to_gemini(tmp_file_path, mime_type)
 
     if gemini_file:
         model = genai.GenerativeModel(
@@ -60,6 +67,10 @@ def process_image(file):
         chat_session = model.start_chat()
         response = chat_session.send_message(gemini_file)
         return response.text
+    
+    # Remove the temporary file
+    os.remove(tmp_file_path)
+
     return None
 
 # Streamlit App
@@ -73,7 +84,7 @@ if upload_option == "Upload from File":
     if uploaded_file is not None:
         image = Image.open(uploaded_file)
         st.image(image, caption="Uploaded Image", use_column_width=True)
-        response = process_image(uploaded_file)
+        response = process_image(uploaded_file, mime_type="image/jpeg")
         if response:
             st.write("Model Response:", response)
 
@@ -82,6 +93,6 @@ elif upload_option == "Take a Picture with Camera":
     if picture is not None:
         image = Image.open(picture)
         st.image(image, caption="Captured Image", use_column_width=True)
-        response = process_image(picture)
+        response = process_image(picture, mime_type="image/jpeg")
         if response:
             st.write("Model Response:", response)
