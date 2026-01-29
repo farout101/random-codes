@@ -45,11 +45,6 @@ public class AuthController {
         return "register";
     }
 
-    @GetMapping("/dashboard")
-    public String showDashboard() {
-        return "dashboard";
-    }
-
     /* =======================
        REST API Endpoints
        ======================= */

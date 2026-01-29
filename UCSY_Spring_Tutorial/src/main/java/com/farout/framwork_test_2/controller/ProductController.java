@@ -6,9 +6,11 @@ import com.farout.framwork_test_2.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,7 +19,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+@Controller
 public class ProductController {
     @Autowired
     private ExcelService excelService;
@@ -26,18 +30,21 @@ public class ProductController {
 
     @GetMapping("/dashboard")
     public String dashboard(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "5") int size, @RequestParam(required = false) String search, Model model) {
-// Get dashboard statistics
-        Map<String, Object> stats = productService.getDashboardStatistics();
-        model.addAttribute("stats", stats);
-// Get recent products
-        List<Product> recentProducts = productService.getRecentProducts();
-        model.addAttribute("products", recentProducts);
-// Get products by category for chart
-        Map<String, Long> categoryCounts = productService.getProductsByCategory();
-        model.addAttribute("categoryData", categoryCounts);
-// Get low stock products
-        List<Product> lowStockProducts = productService.getLowStockProducts();
-        model.addAttribute("lowStockProducts", lowStockProducts);
+
+        // Get paginated products
+        Page<Product> productPage = productService.getProductsWithPagination(page, size, search);
+
+        // Add all necessary attributes to the model
+        model.addAttribute("products", productPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("pageSize", size);
+        model.addAttribute("totalPages", productPage.getTotalPages());
+        model.addAttribute("totalProducts", productPage.getTotalElements());
+        model.addAttribute("search", search);
+        model.addAttribute("stats", productService.getDashboardStatistics());
+        model.addAttribute("categoryData", productService.getProductsByCategory());
+        model.addAttribute("lowStockProducts", productService.getLowStockProducts());
+
 
         return "dashboard";
     }

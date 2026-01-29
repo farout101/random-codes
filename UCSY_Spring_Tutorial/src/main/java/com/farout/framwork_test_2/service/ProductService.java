@@ -3,6 +3,9 @@ package com.farout.framwork_test_2.service;
 import com.farout.framwork_test_2.model.Product;
 import com.farout.framwork_test_2.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -80,4 +83,15 @@ public class ProductService {
             throw new RuntimeException(e);
         }
     }
+
+    public Page<Product> getProductsWithPagination(int page, int size, String search) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        if (search == null || search.isEmpty()) {
+            return this.productRepository.findAll(pageable);
+        } else {
+// Search
+            return productRepository.searchByTerm(search, pageable);
+        }
+    }
+
 }

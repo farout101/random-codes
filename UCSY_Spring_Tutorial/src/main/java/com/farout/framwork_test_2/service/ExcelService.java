@@ -5,6 +5,8 @@ import com.farout.framwork_test_2.repository.ProductRepository;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -12,6 +14,7 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.*;
 
+@Service
 public class ExcelService   {
     @Autowired
     private ProductRepository productRepository;
