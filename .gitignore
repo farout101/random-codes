@@ -24,7 +24,6 @@ client_secret.json
 *.bmp
 *.tiff
 *.ico
-*.svg
 *.mp4
 *.avi
 *.mov
@@ -35,6 +34,6 @@ client_secret.json
 *.rar
 *.7z
 
+# Note: SVG files are text-based and typically small, so they're not blocked
 # Exception: Allow small images in specific directories if needed
 # !docs/images/*.png
-# !assets/icons/*.svg

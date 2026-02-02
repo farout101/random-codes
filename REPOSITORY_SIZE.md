@@ -74,6 +74,7 @@ git push --force
 
 ```bash
 # 1. Install git-filter-repo: pip install git-filter-repo
+#    (or install via your system package manager: apt, brew, etc.)
 git clone https://github.com/farout101/random-codes.git
 cd random-codes
 
